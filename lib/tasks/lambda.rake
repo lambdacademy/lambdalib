@@ -7,6 +7,9 @@ namespace :lambda do
   task :check do
     puts Lambdalib::ascii_logo
     puts
+
+    # TODO: refactor
+    Lambdalib::print_problems
   end
 end
 
