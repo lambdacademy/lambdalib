@@ -4,18 +4,21 @@ require 'colored'
 
 namespace :lambda do
   desc "Check"
-  task :check => :environment do
-    puts Lambdalib::ascii_logo
-    puts
+  task :check, [ :arg ] => :environment do |t, args|
+    unless args.present?
+      puts "Missing problem. Syntax is `rake lambda:check[pset/problem]`"
+      exit 1
+    end
 
-    # TODO: refactor
-    Lambdalib::print_problems
+    puts "arg: #{ args[:arg] }"
+    parts = args[:arg].split '/'
 
-    puts "  Checking project, please be patient...".white.bold
-    puts
+    pset = parts[0]
+    problem = parts[1]
 
-    Lambdalib::run_tests
-    puts
+    problem_class = "#{ pset.camelize }::Pset::#{ problem.camelize }".constantize
+    result = { :success => false }
+    puts result.to_json
   end
 end
 
