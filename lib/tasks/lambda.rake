@@ -18,7 +18,8 @@ namespace :lambda do
 
     problem_class = "#{ pset.camelize }::Pset::#{ problem.camelize }".constantize
     result = { :success => false }
-    puts result.to_json
+
+    puts problem_class.check.to_json
   end
 end
 

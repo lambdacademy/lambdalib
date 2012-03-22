@@ -6,6 +6,8 @@ module Lambdalib
       end
 
       def self.add_test(test)
+        @@tests ||= [ ]
+        @@tests.push test
       end
 
       def self.pset_module_name
@@ -20,12 +22,26 @@ module Lambdalib
         "app/views/#{ pset_module_name.underscore }/problem/#{ code }"
       end
 
+      def self.root_path
+        "#{ pset_module_name }::ROOT_DIR".constantize
+      end
+
+      def self.path_of(uri)
+        File.expand_path File.join( root_path, uri )
+      end
+
       def self.description
-        root_path = "#{ pset_module_name }::ROOT_DIR".constantize
-        puts "ROOT PATH = #{ root_path }"
-        path = File.expand_path File.join( root_path, description_view_path )
-        puts "PATH = #{ path }"
+        path = path_of description_view_path
         ActionView::Base.new(Rails.configuration.paths['app/views'].first).render :file => path
+      end
+
+      def self.check
+        @@tests.map do |test|
+          file = path_of "problems/tests/#{ test }.rb"
+          cmd = "ruby -I#{ root_path }:#{ Lambdalib::ROOT_DIR }:. #{ file }"
+          puts "Running #{ cmd }..."
+          `#{ cmd }`
+        end
       end
     end
   end
