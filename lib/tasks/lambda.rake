@@ -4,13 +4,16 @@ require 'colored'
 
 namespace :lambda do
   desc "Check"
+  task :test do
+    puts "HOWDY"
+  end
+
   task :check, [ :arg ] => :environment do |t, args|
     unless args.present?
       puts "Missing problem. Syntax is `rake lambda:check[pset/problem]`"
       exit 1
     end
 
-    puts "arg: #{ args[:arg] }"
     parts = args[:arg].split '/'
 
     pset = parts[0]
@@ -21,8 +24,4 @@ namespace :lambda do
 
     puts problem_class.check.to_json
   end
-end
-
-desc "Run for λcademy"
-task :lambda => [ "lambda:check" ] do
 end

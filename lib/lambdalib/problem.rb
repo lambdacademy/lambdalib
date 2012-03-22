@@ -36,10 +36,10 @@ module Lambdalib
       end
 
       def self.check
+        puts "@@tests.length = #{ @@tests.length }"
         @@tests.map do |test|
           file = path_of "problems/tests/#{ test }.rb"
           cmd = "ruby -I#{ root_path }:#{ Lambdalib::ROOT_DIR }:. #{ file }"
-          puts "Running #{ cmd }..."
           `#{ cmd }`
         end
       end
