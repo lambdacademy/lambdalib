@@ -36,12 +36,18 @@ module Lambdalib
       end
 
       def self.check
-        puts "@@tests.length = #{ @@tests.length }"
-        @@tests.map do |test|
+        result = { "success" => false, :errors => { "unknown" => "No checks run" } }
+
+        @@tests.each do |test|
           file = path_of "problems/tests/#{ test }.rb"
           cmd = "ruby -I#{ root_path }:#{ Lambdalib::ROOT_DIR }:. #{ file }"
-          `#{ cmd }`
+          result = ActiveSupport::JSON.decode `#{ cmd }`
+
+          puts "going to fail: #{ result.inspect }" unless result["success"]
+          return result unless result["success"]
         end
+
+        return { "success" => true }
       end
     end
   end
